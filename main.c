@@ -79,7 +79,7 @@ int main()
         //GYROSCOPE
 	
 
-	//Ma
+	//MAGNETOMETER
 	
 
 

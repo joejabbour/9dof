@@ -14,6 +14,24 @@
 #define GYRO  0x68
 #define MAG   0x1e
 
+//Accel registers
+#define ACCEL_POWER_CTL 0x2d
+#define ACCEL_OFSX 0x1e
+#define ACCEL_OFSY 0x1f
+#define ACCEL_OFSZ 0x20
+
+//gyro registers
+#define GYRO_POWER_MGM 0x3e
+#define GYRO_SAMPLERATE_DIV 0x15
+#define GYRO_INT_CFG 0x17
+#define GYRO_LPF_FS 0x16
+
+//mag registers
+#define MAG_CONFIGREG_A 0x00
+#define MAG_CONFIGREG_B 0x01
+#define MAG_MODEREG 0x02
+
+
 
 void accelset (uint8_t reg, uint8_t value)
 {
@@ -46,5 +64,14 @@ void magread (uint8_t *buf)
 	i2cread(MAG,0x03,buf,6);
 }
 
+void gy85setup (void)
+{
+	//accel
+	accelset(0x2d,0x08);
 
+	//gyro
+	
+	//mag
+	magset(0x02,0x00); //continuous measurement mode
+}
 

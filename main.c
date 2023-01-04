@@ -8,6 +8,8 @@
 #include </home/pi/9dof/i2cwrap.h>
 #include </home/pi/9dof/gy85.h>
 #include <signal.h>
+#include <math.h>
+
 #define ACCEL_POWER_CTL 0x2d // write 0x08 to start measuring
 
 #define GYRO_POWER_MGM 0x3e
@@ -34,6 +36,7 @@ int main()
 
 	printf("here we go <enhanced>\n");
 	i2cinit();
+	gy85setup();
      
 
 
@@ -49,9 +52,18 @@ int main()
 	float accely;
 	float accelz;
 
-        accelset(0x2d,0x08);
-	magset(0x02,0x00); //continuous measurement mode
+ 	float magx;
+	float magy;
+	float magz;
+	
+
+	float gyrox;
+	float gyroy;
+	float gyroz;
+
      
+	float angleyx;
+	float anglezx;
 
 	while(1)
 	
@@ -68,24 +80,43 @@ int main()
         
         //ACCELOMETER 
 
-	accelcal[0] = (acceldata[1] << 8) + acceldata [0];
+	accelcal[0] = (acceldata[1] << 8) + acceldata [0];// first value is least significant byte of x
 	accelcal[1] = (acceldata[3] << 8) + acceldata [2];
 	accelcal[2] = (acceldata[5] << 8) + acceldata [4];
 
-	accelx = (float)accelcal[0]*(9.8/256);
+	accelx = (float)accelcal[0]*(9.8/256); // or we can multiply by (scalefactor/1000) for default 10-bit resolution +-2g 
         accely = (float)accelcal[1]*(9.8/256);
 	accelz = (float)accelcal[2]*(9.8/256);
 
         //GYROSCOPE
 	
+	gyrocal[0] = (gyrodata[1] << 8) + gyrodata [0];// first value is msb
+	gyrocal[1] = (gyrodata[3] << 8) + gyrodata [2];
+	gyrocal[2] = (gyrodata[5] << 8) + gyrodata [4];
+
+	gyrox = (float)gyrocal[0];
+	gyroy = (float)gyrocal[1];
+	gyroz = (float)gyrocal[2];
 
 	//MAGNETOMETER
 	
+	magcal[0] = (magdata[0] << 8) + magdata[1]; //first value is MSB of X
+	magcal[1] = (magdata[2] << 8) + magdata[3];
+	magcal[2] = (magdata[4] << 8) + magdata[5];
 
+	magx = (float)magcal[0] ;
+	magy = (float)magcal[1] ;
+	magz = (float)magcal[2] ;
 
-
+	angleyx = ((float)atan(magy/magx) * 180) / 3.141592 ;
+	anglezx = ((float)atan(magz/magx) * 180) / 3.141592 ;
+       
         //we re going up, accel positive in z direction 
-	printf("accel cal: %f %f %f \n" ,accelx,accely,accelz);
+	printf("accel calc: %f %f %f \n" ,accelx,accely,accelz);
+	printf("gyro calc: %f %f %f \n" ,gyrox,gyroy,gyroz);
+	printf("mag yx: %f  mag zx: %f \n" ,angleyx ,anglezx);
+        	
+        	
         	
 	
 	sleep(1); 

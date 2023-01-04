@@ -37,7 +37,7 @@ int main()
 	printf("here we go <enhanced>\n");
 	i2cinit();
 	gy85setup();
-     
+	sleep(0.1);     
 
 
   	uint8_t acceldata [6] = {0};
@@ -60,10 +60,21 @@ int main()
 	float gyrox;
 	float gyroy;
 	float gyroz;
-
+        float gyroxoffset;
+        float gyroyoffset;
+	float gyrozoffset;	
      
 	float angleyx;
 	float anglezx;
+
+        gyroread(gyrodata); //offset calibration for gyro
+	gyrocal[0] = (gyrodata[0] << 8) + gyrodata [1];// first value is msb
+	gyrocal[1] = (gyrodata[2] << 8) + gyrodata [3];
+	gyrocal[2] = (gyrodata[4] << 8) + gyrodata [5];
+
+	gyroxoffset = gyrocal[0]/14.375;
+	gyroyoffset = gyrocal[1]/14.375;
+	gyrozoffset = gyrocal[2]/14.375;
 
 	while(1)
 	
@@ -90,13 +101,13 @@ int main()
 
         //GYROSCOPE
 	
-	gyrocal[0] = (gyrodata[1] << 8) + gyrodata [0];// first value is msb
-	gyrocal[1] = (gyrodata[3] << 8) + gyrodata [2];
-	gyrocal[2] = (gyrodata[5] << 8) + gyrodata [4];
+	gyrocal[0] = (gyrodata[0] << 8) + gyrodata [1];// first value is msb
+	gyrocal[1] = (gyrodata[2] << 8) + gyrodata [3];
+	gyrocal[2] = (gyrodata[4] << 8) + gyrodata [5];
 
-	gyrox = (float)gyrocal[0];
-	gyroy = (float)gyrocal[1];
-	gyroz = (float)gyrocal[2];
+	gyrox = (gyrocal[0]/14.375) - gyroxoffset;
+	gyroy = (gyrocal[1]/14.375) - gyroyoffset;
+	gyroz = (gyrocal[2]/14.375) - gyrozoffset;
 
 	//MAGNETOMETER
 	

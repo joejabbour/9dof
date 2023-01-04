@@ -70,7 +70,8 @@ void gy85setup (void)
 	accelset(0x2d,0x08);
 
 	//gyro
-	
+	gyroset(0x16,0x03);
+
 	//mag
 	magset(0x02,0x00); //continuous measurement mode
 }

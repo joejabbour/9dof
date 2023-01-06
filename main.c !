@@ -6,7 +6,7 @@
 #include <stdint.h>
 #include <unistd.h>
 #include </home/pi/9dof/i2cwrap.h>
-#include </home/pi/9dof/gy85.h>
+#include </home/pi/9dof/gy851.h>
 #include <signal.h>
 #include <math.h>
 

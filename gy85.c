@@ -49,19 +49,34 @@ void magset (uint8_t reg, uint8_t value)
 }
 
 
-void accelread (uint8_t *buf)
+void accelread (int16_t *accelval)
 {	
+	uint8_t buf [6];
 	i2cread(ACCEL,0x32,buf,6);
+
+	accelval[0] = (buf[1] << 8) + buf [0];
+	accelval[1] = (buf[3] << 8) + buf [2];
+	accelval[2] = (buf[5] << 8) + buf [4];
 }
 
-void gyroread (uint8_t *buf)
+void gyroread (int16_t *gyroval)
 {
+	uint8_t buf [6];
 	i2cread(GYRO,0x1d,buf,6);
+
+	gyroval[0] = (buf[0] << 8) + buf [1];
+	gyroval[1] = (buf[2] << 8) + buf [3];
+	gyroval[2] = (buf[4] << 8) + buf [5];
 }
 
-void magread (uint8_t *buf)
+void magread (int16_t *magval)
 {
+	uint8_t buf [6];
 	i2cread(MAG,0x03,buf,6);
+
+	magval[0] = (buf [0] << 8) + buf[1];
+	magval[1] = (buf [2] << 8) + buf[3];
+	magval[2] = (buf [4] << 8) + buf[5];
 }
 
 void gy85setup (void)

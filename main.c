@@ -96,9 +96,9 @@ int main()
 	//MAGNETOMETER
 	
 
-	magx = (float)magcal[0] ;
-	magy = (float)magcal[1] ;
-	magz = (float)magcal[2] ;
+	magx = magcal[0] ;
+	magy = magcal[1] ;
+	magz = magcal[2] ;
 
 	angleyx = ((float)atan(magy/magx) * 180) / 3.141592 ;
 	anglezx = ((float)atan(magz/magx) * 180) / 3.141592 ;

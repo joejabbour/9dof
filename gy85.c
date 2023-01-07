@@ -79,6 +79,66 @@ void magread (int16_t *magval)
 	magval[2] = (buf [4] << 8) + buf[5];
 }
 
+void accelaverage ( int16_t *accelval, int count)
+{
+	int32_t buffer[3] = {0} ;
+
+	for (int j = 1 ; j <= count ; j++) 
+	{
+		accelread(accelval);
+		for (int i = 0 ; i <= 2 ; i++)
+		{
+			buffer[i] += accelval[i];
+		}
+	}
+
+	for (int k = 0; k <= 2 ; k++)
+	{
+		accelval[k] = buffer[k] / count;
+	}
+}
+
+
+void gyroaverage ( int16_t *gyroval, int count)
+{
+	int32_t buffer[3] = {0} ;
+
+	for (int j = 1 ; j <= count ; j++) 
+	{
+		gyroread(gyroval);
+		for (int i = 0 ; i <= 2 ; i++)
+		{
+		buffer[i] += gyroval[i];
+		}
+	}
+
+	for (int k = 0; k <= 2 ; k++)
+	{
+		gyroval[k] = buffer[k] / count;
+	}
+}
+
+
+void magaverage ( int16_t *magval, int count)
+{
+	int32_t buffer[3] = {0} ;
+
+	for (int j = 1 ; j <= count ; j++) 
+	{
+		magread(magval);
+		for (int i = 0 ; i <= 2 ; i++)
+		{
+			buffer[i] += magval[i];
+		}
+	}
+
+	for (int k = 0; k <= 2 ; k++)
+	{
+		magval[k] = buffer[k] / count;
+	}
+}
+
+
 void gy85setup (void)
 {
 	//accel

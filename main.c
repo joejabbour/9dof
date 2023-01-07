@@ -64,7 +64,7 @@ int main()
 	float angleyx;
 	float anglezx;
 
-        gyroread(gyrocal); //offset calibration for gyro
+        gyroaverage(gyrocal,10); //offset calibration for gyro
 
 	gyroxoffset = gyrocal[0]/14.375;
 	gyroyoffset = gyrocal[1]/14.375;
@@ -75,7 +75,11 @@ int main()
 	{
 
    	accelread(accelcal);
-	gyroread(gyrocal);
+	
+	
+	gyroaverage(gyrocal,10);
+	
+
 	magread(magcal);
         
         

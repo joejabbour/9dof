@@ -86,9 +86,9 @@ int main()
         //ACCELOMETER 
 
 
-	accelx = accelcal[0]*(9.8/256); // or we can multiply by (scalefactor/1000) for default 10-bit resolution +-2g 
-        accely = accelcal[1]*(9.8/256);
-	accelz = accelcal[2]*(9.8/256);
+	accelx = accelcal[0]*(0.039); //  multiply by (scalefactor/1000) for default 10-bit resolution +-2g or 9.81/256
+        accely = accelcal[1]*(0.039);
+	accelz = accelcal[2]*(0.039);
 
         //GYROSCOPE
 	

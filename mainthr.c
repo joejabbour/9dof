@@ -149,29 +149,6 @@ int main()
 	gy85setup();
 	sleep(0.1);
 
-
-
-
-
-
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	cpu_set_t CPUSET;
 	CPU_ZERO(&CPUSET);
 	CPU_SET(3,&CPUSET);
@@ -229,7 +206,8 @@ int main()
 
 	timer_settime(timer_1,flags,&itime,&last_itime);
 
-	i2cclose();	
+	i2cclose();
+	printf("the end reached\n.");	
 	return 0;
 }
 

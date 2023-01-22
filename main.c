@@ -24,9 +24,7 @@
 
 void sigint_handler(int sig_num)
 {
-	printf("\n Signal handler, closing i2c fd\n");
 	i2cclose();
-	printf("Done!\n");
 	exit(0);
 }
 

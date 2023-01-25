@@ -5,4 +5,4 @@ accelcalibrate: gy85.c i2cwrap.c accelcalibrate.c
 	gcc -o accelcalibrate gy85.c i2cwrap.c accelcalibrate.c
 
 mainthr: gy85.c i2cwrap.c mainthr.c
-	gcc -o mainthr gy85.c i2cwrap.c -lm -lrt -lpthread
+	gcc -o mainthr mainthr.c gy85.c i2cwrap.c -lm -lrt -lpthread

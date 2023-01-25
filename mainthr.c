@@ -33,6 +33,25 @@
 
 #define THREAD_NUM 1
 
+struct timespec start,finish,delta;
+
+void delta (struct timespec starttime,struct timespec finishtime,struct timespec *deltatime)
+{
+	deltatime->tv_nsec = finishtime.tv_nsec - starttime.tv_nsec;
+	deltatime->tv_sec = finishtime.tv_sec - starttime.tv_sec;
+
+	if (deltatime->tv_sec > 0 && deltatime->tv_nsec < 0 )
+	{
+		deltatime->tv_nsec += 1000000000;
+		deltatime->tv_sec -= 1;
+	}
+	if (deltatime->tv_sec < 0 && deltatime->tv_nsec >0 )
+	{
+		deltatime->tv_nsec -= 1000000000;
+		deltatime->tv_sec++;
+	}
+}
+
 
 typedef struct {
 	int number;
@@ -53,7 +72,8 @@ int flags=0;
 
 sem_t sem1,sem2;
 
-int abort=false;
+int _abort=0;
+int seqcount=0;
 
 void sequencer (int id);
 void inthandler (int); 
@@ -92,10 +112,13 @@ void * getimu (void * threadarg)
         gyrozoffset = gyrocal[2]/14.375;
 
 
-	while(!abort)
+	while(!_abort)
 	{
 		sem_wait(&sem1);
-	
+
+		clock_gettime(CLOCK_REALTIME,&start);
+
+		system("clear");	
 		accelread(accelcal);
 	        gyroaverage(gyrocal,10);
         	magread(magcal);
@@ -130,8 +153,11 @@ void * getimu (void * threadarg)
         	printf("accel calc: %f %f %f \n" ,accelx,accely,accelz);
         	printf("gyro calc: %f %f %f \n" ,gyrox,gyroy,gyroz);
         	printf("mag yx: %f  mag zx: %f \n" ,angleyx ,anglezx);
+		clock_getime(CLOCK_REALTIME,&finish);
+		delta(start,finish,&delta);
+		
+		printf("time it took: %f ms \n", delta.tv_ns/1000000);
 
-		system("clear");
 	
 	}
 
@@ -165,7 +191,7 @@ int main()
 		pthread_attr_setscope (&threadattr[i],PTHREAD_SCOPE_SYSTEM);
 		pthread_attr_setschedpolicy(&threadattr[i],SCHED_FIFO);
 		param[i].sched_priority=maxprio-i-1;
-		pthread_attr_setchedparam(&threadattr[i],&param[i]);
+		pthread_attr_setschedparam(&threadattr[i],&param[i]);
 		pthread_attr_setaffinity_np(&threadattr[i],sizeof(cpu_set_t),&CPUSET);
 	}
 
@@ -189,9 +215,9 @@ int main()
 
         //3hz
 	itime.it_interval.tv_sec=0;
-	itime.it_interval.tv_nsec=333333333;
+	itime.it_interval.tv_nsec=100000000;
 	itime.it_value.tv_sec=0;
-	itime.it_value.tv_nsec=333333333;
+	itime.it_value.tv_nsec=100000000;
 
 	timer_settime(timer_1,flags,&itime,&last_itime);
 
@@ -214,9 +240,9 @@ int main()
 void sequencer (int id)      //signal handler ,executes every 333ms
 
 {
-	printf("sequencer: %d \n",seqcount);
+	//printf("sequencer: %d \n",seqcount);
 
-	if ((seqcount%10)==0) { sem_post(&sem1);}  //
+	if ((seqcount%10)==0) { sem_post(&sem1);}  //100ms
 
 	if (seqcount == 10){
 		seqcount=0;  //this is since it s only one thread,in case added threads,
@@ -227,5 +253,5 @@ seqcount++;
 
 void inthandler (int sig)
 {
-	abort=true;
+	_abort=1;
 }

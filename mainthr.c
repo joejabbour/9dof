@@ -120,12 +120,19 @@ void * getimu (void * threadarg)
 
 		system("clear");	
 		accelread(accelcal);
-	        gyroaverage(gyrocal,10);
+	        gyroread(gyrocal);
         	magread(magcal);
+	
+		
+		clock_gettime(CLOCK_REALTIME,&finish);
+		delta(start,finish,&deltat);
+		
+		printf("time it took (i2c): %d ms \n", (deltat.tv_nsec)/1000000);
+        	
+		//ACCELOMETER 
 
-
-        	//ACCELOMETER 
-
+		clock_gettime(CLOCK_REALTIME,&start);
+	
 
         	accelx = accelcal[0]*(0.039); //  multiply by (scalefactor/1000) for default 10-bit resolution +-2g or 9.81/256
         	accely = accelcal[1]*(0.039);
@@ -148,15 +155,11 @@ void * getimu (void * threadarg)
         	angleyx = ((float)atan(magy/magx) * 180) / 3.141592 ;
         	anglezx = ((float)atan(magz/magx) * 180) / 3.141592 ;
 
-		clock_gettime(CLOCK_REALTIME,&finish);
-		delta(start,finish,&deltat);
-		
-		printf("time it took: %d ms \n", (deltat.tv_nsec)/1000000);
+
 		//we re going up, accel positive in z direction 
         
 
-		clock_gettime(CLOCK_REALTIME,&start);
-	
+
 		printf("accel calc: %f %f %f \n" ,accelx,accely,accelz);
         	printf("gyro calc: %f %f %f \n" ,gyrox,gyroy,gyroz);
         	printf("mag yx: %f  mag zx: %f \n" ,angleyx ,anglezx);
@@ -164,7 +167,7 @@ void * getimu (void * threadarg)
 		clock_gettime(CLOCK_REALTIME,&finish);
 		delta(start,finish,&deltat);
 		
-		printf("time it took to printf: %d ms \n", (deltat.tv_nsec)/1000000);
+		printf("time it took to calculations + printf: %d ms \n", (deltat.tv_nsec)/1000000);
 
 	
 	}

@@ -33,7 +33,7 @@
 
 #define THREAD_NUM 1
 
-struct timespec start,finish,delta;
+struct timespec start,finish,deltat;
 
 void delta (struct timespec starttime,struct timespec finishtime,struct timespec *deltatime)
 {
@@ -148,15 +148,23 @@ void * getimu (void * threadarg)
         	angleyx = ((float)atan(magy/magx) * 180) / 3.141592 ;
         	anglezx = ((float)atan(magz/magx) * 180) / 3.141592 ;
 
-
+		clock_gettime(CLOCK_REALTIME,&finish);
+		delta(start,finish,&deltat);
+		
+		printf("time it took: %d ms \n", (deltat.tv_nsec)/1000000);
 		//we re going up, accel positive in z direction 
-        	printf("accel calc: %f %f %f \n" ,accelx,accely,accelz);
+        
+
+		clock_gettime(CLOCK_REALTIME,&start);
+	
+		printf("accel calc: %f %f %f \n" ,accelx,accely,accelz);
         	printf("gyro calc: %f %f %f \n" ,gyrox,gyroy,gyroz);
         	printf("mag yx: %f  mag zx: %f \n" ,angleyx ,anglezx);
-		clock_getime(CLOCK_REALTIME,&finish);
-		delta(start,finish,&delta);
 		
-		printf("time it took: %f ms \n", delta.tv_ns/1000000);
+		clock_gettime(CLOCK_REALTIME,&finish);
+		delta(start,finish,&deltat);
+		
+		printf("time it took to printf: %d ms \n", (deltat.tv_nsec)/1000000);
 
 	
 	}

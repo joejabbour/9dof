@@ -248,7 +248,7 @@ int main()
 	return 0;
 }
 
-void sequencer (int id)      //signal handler ,executes every 333ms
+void sequencer (int id)      //signal handler ,executes every 100ms
 
 {
 	//printf("sequencer: %d \n",seqcount);

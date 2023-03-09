@@ -35,7 +35,7 @@
 
 struct timespec start,finish,deltat;
 
-void delta (struct timespec starttime,struct timespec finishtime,struct timespec *deltatime)
+void delta (struct timespec starttime,struct timespec finishtime,struct timespec *deltatime) 
 {
 	deltatime->tv_nsec = finishtime.tv_nsec - starttime.tv_nsec;
 	deltatime->tv_sec = finishtime.tv_sec - starttime.tv_sec;
@@ -114,7 +114,7 @@ void * getimu (void * threadarg)
 
 	while(!_abort)
 	{
-		sem_wait(&sem1);
+		sem_wait(&sem1); //Wait on semaphore release from signal handler
 
 		clock_gettime(CLOCK_REALTIME,&start);
 
@@ -224,9 +224,9 @@ int main()
 	timer_create(CLOCK_REALTIME,NULL,&timer_1);
 	signal(SIGALRM,(void(*)()) sequencer); //clock realtime sends SIGALRM
 
-        //3hz
+        //10hz
 	itime.it_interval.tv_sec=0;
-	itime.it_interval.tv_nsec=100000000;
+	itime.it_interval.tv_nsec=100000000; //100ms 10hz
 	itime.it_value.tv_sec=0;
 	itime.it_value.tv_nsec=100000000;
 
@@ -253,7 +253,7 @@ void sequencer (int id)      //signal handler ,executes every 100ms
 {
 	//printf("sequencer: %d \n",seqcount);
 
-	if ((seqcount%10)==0) { sem_post(&sem1);}  //100ms
+	if ((seqcount%10)==0) { sem_post(&sem1);}  //100msx10=1seconds
 
 	if (seqcount == 10){
 		seqcount=0;  //this is since it s only one thread,in case added threads,

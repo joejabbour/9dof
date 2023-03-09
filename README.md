@@ -4,7 +4,7 @@ This still needs some optimization but i have been busy so hopefully i will find
 i2cwrapper.c is used around ioctl() ,read() and write() sys calls the i2c driver of raspberry pi will handle the rest.
 gy85.c is a wrapper around i2cwrapper.c for gy85 module.
 
-In the main program, interval timer will execute sequencer() signal handler, which in turns release semaphore on the thread (SCHED_FIFO highest priority on core 4) 
+In the mainthr.c program, interval timer will execute sequencer() signal handler, which in turns release semaphore on the thread (SCHED_FIFO highest priority on core 4) 
 that will fetch i2c data.
 User can choose the interval time depending on application.
 data is still noisy, i still have to implement digital filters.

@@ -1,7 +1,0 @@
-Plan:
-1) data retreived on Core 3
-  a)check time between each arrival
-2) using memmory mapping or message queues to save these data on a file Core 2 
-  a)check time between each stored entry
-3) send data real-time on Core 1
-  a)figure out time it took to receive on server (latency and jitter) 
